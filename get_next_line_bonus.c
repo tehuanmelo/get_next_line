@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tehuanmelo <tehuanmelo@student.42.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 09:44:26 by tde-melo          #+#    #+#             */
-/*   Updated: 2022/08/18 23:31:42 by tehuanmelo       ###   ########.fr       */
+/*   Updated: 2022/08/18 23:32:55 by tehuanmelo       ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*extra_char(char *str)
 {
@@ -88,31 +88,57 @@ char	*read_line(char *str, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*str;
+	static char	*str[256];
 	char		*line;
 
 	if (fd < 0 || fd > 8 || BUFFER_SIZE <= 0)
 		return (NULL);
-	str = read_line(str, fd);
-	line = get_line(str);
-	str = extra_char(str);
+	str[fd] = read_line(str[fd], fd);
+	line = get_line(str[fd]);
+	str[fd] = extra_char(str[fd]);
 	return (line);
 }
 
 // int main()
 // {
-//     int fd = open("file.txt", O_RDONLY);
+//     int fd1 = open("file1.txt", O_RDONLY);
+//     int fd2 = open("file2.txt", O_RDONLY);
+//     int fd3 = open("file3.txt", O_RDONLY);
 
-//    char *str;
+//    char *str1 = get_next_line(fd1);
+//    char *str2 = get_next_line(fd2);
+//    char *str3 = get_next_line(fd3);
 
-//     while (1)
-//     {
+//    printf("%s", str1);
+//    printf("%s", str2);
+//    printf("%s", str3);
 
-//         str = get_next_line(fd);
-//         if (!str)
-//             break ;
-//         printf("%s", str);
-//         free(str);
+//    free(str1);
+//    free(str2);
+//    free(str3);
+   
+//    str1 = get_next_line(fd1);
+//    str2 = get_next_line(fd2);
+//    str3 = get_next_line(fd3);
 
-//     }
+//    printf("%s", str1);
+//    printf("%s", str2);
+//    printf("%s", str3);
+
+//    free(str1);
+//    free(str2);
+//    free(str3);
+   
+//    str1 = get_next_line(fd1);
+//    str2 = get_next_line(fd2);
+//    str3 = get_next_line(fd3);
+
+//    printf("%s", str1);
+//    printf("%s", str2);
+//    printf("%s", str3);
+
+//    free(str1);
+//    free(str2);
+//    free(str3);
+
 // }
