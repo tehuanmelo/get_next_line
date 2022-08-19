@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tehuanmelo <tehuanmelo@student.42.fr>      +#+  +:+       +#+        */
+/*   By: tde-melo <tde-melo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 09:44:26 by tde-melo          #+#    #+#             */
-/*   Updated: 2022/08/18 23:31:42 by tehuanmelo       ###   ########.fr       */
+/*   Updated: 2022/08/19 14:00:38 by tde-melo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,15 @@ char	*extra_char(char *str)
 	int		j;
 	char	*remainder;
 
-	if (!*str)
-	{
-		free(str);
-		return (NULL);
-	}
 	i = 0;
 	while (str[i] && str[i] != '\n')
 		i++;
 	j = ft_strlen(str) - i - 1;
+	if (j < 0 || !*str)
+	{
+		free(str);
+		return (NULL);
+	}
 	remainder = malloc((j + 1) * sizeof(char));
 	if (!remainder)
 		return (NULL);
@@ -66,20 +66,22 @@ char	*read_line(char *str, int fd)
 {
 	char	*buffer;
 	ssize_t	flag;
+	size_t	buffer_cast;
 
-	buffer = malloc((BUFFER_SIZE + 1) * sizeof(char));
+	buffer_cast = (size_t)BUFFER_SIZE;
+	buffer = malloc((buffer_cast + 1) * sizeof(char));
 	if (!buffer)
 		return (NULL);
 	flag = 1;
 	while (!ft_strchar(str, '\n') && flag)
 	{
-		flag = read(fd, buffer, BUFFER_SIZE);
-		buffer[flag] = 0;
+		flag = read(fd, buffer, buffer_cast);
 		if (flag == -1)
 		{
 			free(buffer);
 			return (0);
 		}
+		buffer[flag] = 0;
 		str = ft_strjoin(str, buffer);
 	}
 	free(buffer);
@@ -91,9 +93,14 @@ char	*get_next_line(int fd)
 	static char	*str;
 	char		*line;
 
-	if (fd < 0 || fd > 8 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	str = read_line(str, fd);
+	if (!str)
+	{
+		free(str);
+		return (NULL);
+	}
 	line = get_line(str);
 	str = extra_char(str);
 	return (line);
@@ -109,8 +116,9 @@ char	*get_next_line(int fd)
 //     {
 
 //         str = get_next_line(fd);
-//         if (!str)
-//             break ;
+//         if (!str){
+// 			free(str);
+//             break ;}
 //         printf("%s", str);
 //         free(str);
 
