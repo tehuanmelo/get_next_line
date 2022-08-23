@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tde-melo <tde-melo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/16 09:44:26 by tde-melo          #+#    #+#             */
-/*   Updated: 2022/08/23 09:23:39 by tde-melo         ###   ########.fr       */
+/*   Updated: 2022/08/23 09:25:09 by tde-melo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*extra_char(char *str)
 {
@@ -90,18 +90,18 @@ char	*read_line(char *str, int fd)
 
 char	*get_next_line(int fd)
 {
-	static char	*str;
+	static char	*str[256];
 	char		*line;
 
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
-	str = read_line(str, fd);
-	if (!str)
+	str[fd] = read_line(str[fd], fd);
+	if (!str[fd])
 	{
-		free(str);
+		free(str[fd]);
 		return (NULL);
 	}
-	line = get_line(str);
-	str = extra_char(str);
+	line = get_line(str[fd]);
+	str[fd] = extra_char(str[fd]);
 	return (line);
 }
